@@ -24,10 +24,6 @@ type Currency struct {
 	CreateDate string `json:"create_date"`
 }
 
-// type USDBRL struct {
-// 	Currency Currency `json:"USDBRL"`
-// }
-
 func main() {
 	// faz a solicitação da cotação para o servidor
 	ctx, cancel := context.WithTimeout(context.Background(), 1300*time.Millisecond)
@@ -51,31 +47,23 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// err = json.Unmarshal([]byte(resp.Body), &currency)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// parseia o JSON da resposta HTTP para obter o valor da cotação atual
-
-	//usdbrl := data["USDBRL"]
-	// Acesse o valor desejado pelo índice da estrutura
-	//currency.Bid = data["bid"].(map[string]interface{})["currency"].(map[string]interface{})["bid"].(string)
-
-	//err = json.Unmarshal(usdbrl, &currency)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//fmt.Println(string(usdbrl))
-	// fmt.Println("Valor do dólar : ", currency.Bid)
-	// valorDoDolar, _ := strconv.ParseFloat(currency.Bid, 64)
-	fmt.Println("Valor do dólar f : ", currency.Bid)
-	// salva o valor da cotação em um arquivo
-	// err = ioutil.WriteFile("cotacao.txt", []byte(fmt.Sprintf("Dólar: %.2f", currency.Bid)), 0644)
-	err = os.WriteFile("cotacao.txt", []byte(fmt.Sprintf("Dólar: %.2f", currency.Bid)), 0644)
+	// Abre o arquivo "cotacao.txt" para escrita com adição (append) ou criação se não existir
+	file, err := os.OpenFile("cotacao.txt", os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Erro ao abrir o arquivo:", err)
 		return
 	}
+	defer file.Close()
 
-	fmt.Println("Cotação atual do dólar: ", currency.Bid)
+	// Monta a mensagem que será gravada no arquivo
+	content := "\nDólar:" + currency.Bid + " cotado em " + time.Now().Format("2006-01-02 15:04:05")
+
+	// Escreve a string formatada no arquivo
+	_, err = file.WriteString(content)
+	if err != nil {
+		fmt.Println("Erro ao escrever no arquivo:", err)
+		return
+	}
+	// Mostra na linha de comando o que será gravado no arquivo
+	fmt.Println(content)
 }

@@ -1,1 +1,5 @@
-Dólar: %!f(string=4.)
+
+Dólar:5.0153 cotado em 2024-03-28 23:13:58
+Dólar:5.0153 cotado em 2024-03-28 23:19:10
+Dólar:5.0153 cotado em 2024-03-28 23:19:17
+Dólar:5.0153 cotado em 2024-03-28 23:19:23
